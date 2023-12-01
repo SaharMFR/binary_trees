@@ -1,5 +1,7 @@
 #include "binary_trees.h"
 
+int helper(const binary_tree_t *tree, size_t i, size_t size);
+
 /**
  * binary_tree_is_complete - Checks if a binary tree is complete.
  * @tree: A pointer to the root node ot the tree to check.
@@ -7,60 +9,44 @@
  */
 int binary_tree_is_complete(const binary_tree_t *tree)
 {
-	binary_tree_t *l, *r;
+	size_t size;
 
 	if (!tree)
 		return (0);
+	size = binary_tree_size(tree);
 
-	l = tree->left;
-	r = tree->right;
+	return (helper(tree, 0, size));
+}
 
-	if (binary_tree_is_leaf(tree))
+/**
+ * helper - Helps `binary_tree_is_complete` function.
+ * @tree: A pointer to the root node of the tree to check.
+ * @i: The index of the node to check.
+ * @size: The number of nodes in the tree.
+ * Return: 1 if the tree is complete, 0 otherwise.
+ */
+int helper(const binary_tree_t *tree, size_t i, size_t size)
+{
+	if (!tree)
 		return (1);
 
-	if (!l && r)
+	if (i > size - 1)
 		return (0);
 
-	if (binary_tree_height(l) == binary_tree_height(r)
-			|| binary_tree_height(l) == binary_tree_height(r) - 1)
-	{
-		if (binary_tree_is_complete(l) && binary_tree_is_complete(r))
-			return (1);
-	}
-
-	return (0);
+	return (helper(tree->left, 2 * i + 1, size) &&
+		helper(tree->right, 2 * i + 2, size));
 }
 
 /**
- * binary_tree_is_leaf - Checks if a node is a leaf or not.
- * @node: A pointer to the node to check.
- * Return: 1 if `node` is a leaf, 0 otherwise.
- */
-int binary_tree_is_leaf(const binary_tree_t *node)
-{
-	if (!node || node->right || node->left)
-		return (0);
-	return (1);
-}
-
-/**
- * binary_tree_height - Measures the height of a binary tree.
+ * binary_tree_size - Measures the size of a binary tree.
  * @tree: A pointer to the root node of the tree to measure
- *	the height of.
- * Return: The calculated height, or 0 if `tree` is NULL.
+ *	 the size of.
+ * Return: The calculated size, or 0 if `tree` is NULL.
  */
-size_t binary_tree_height(const binary_tree_t *tree)
+size_t binary_tree_size(const binary_tree_t *tree)
 {
-	size_t l = 0, r = 0;
-
 	if (!tree)
 		return (0);
 
-	if (tree->right)
-		r = 1 + binary_tree_height(tree->right);
-
-	if (tree->left)
-		l = 1 + binary_tree_height(tree->left);
-
-	return ((r > l) ? r : l);
+	return (1 + binary_tree_size(tree->right) + binary_tree_size(tree->left));
 }
