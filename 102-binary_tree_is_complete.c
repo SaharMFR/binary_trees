@@ -21,7 +21,8 @@ int binary_tree_is_complete(const binary_tree_t *tree)
 	if (!l && r)
 		return (0);
 
-	if (binary_tree_height(l) == binary_tree_height(r))
+	if (binary_tree_height(l) == binary_tree_height(r) \
+			|| binary_tree_height(l) == binary_tree_height(r) - 1)
 	{
 		if (binary_tree_is_complete(l) && binary_tree_is_complete(r))
 			return (1);
